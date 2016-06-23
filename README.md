@@ -1,12 +1,14 @@
 # Prêt-à-Springboot
 
-This is a standalone SpringBoot application that I use as a minimal starting point for lot's of experimentation.
+This is a standalone SpringBoot application that I use as a minimal starting 
+ point for lot's of experimentation.
 
 I have configured it to be ready to use.
 
 # Main application entry point
 
-The Java entry point for the application is the `static void main` method of the `Application` class.
+The Java entry point for the application is the `static void main` method of 
+ the `Application` class.
 
 ~~~Java
 @Configuration
@@ -24,40 +26,48 @@ The annotations on this class do the following:
 
 * `@Configuration` – Identifies the class as one that contains Java based Spring configuration.
 * `@EnableAutoConfiguration` – Instructs SpringBoot to look for and configure anything on
-your classpath that you may have missed. I prefer to not use this and be in control but for
-quick throw-away proofs-of-concept it can be handy to leave this on.
+ your classpath that you may have missed. I prefer to not use this and be in control but for
+ quick throw-away proofs-of-concept it can be handy to leave this on.
 * `@ComponentScan` – Instructs SpringBoot to automatically scan for Spring components.
 
 # Server configuration
 
-You can enable Spring Web MVC by adding the `@EnableWebMvs` annotation to one of your configuration classes.
+SpringBoot provides auto-configuration of MVC and HATEOAS HAL Hypermedia. 
+ If you do need to tweak or adapt the auto-configuration then you extend Spring's
+ `WebMvcConfigurerAdapter` class, overriding the methods as you need.
 
-I have added this annotation to a class called `ServerConfiguration`. 
-This class will become a handy place to then configure other server related 
-features and functionality like enabling HATEOAS support for RESTful services.
+In this starter application I don't provide a root web-page as I wish
+ it to be a RESTful API server. So I redirect all root web requests
+ to the Swagger RESTful API documentation page.
 
 ~~~Java
 @Configuration
-@EnableWebMvc
-@EnableHypermediaSupport(type= {EnableHypermediaSupport.HypermediaType.HAL})
-public class ServerConfiguration extends WebMvcAutoConfiguration {
+public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
      
-     // ...
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+
+        // This application does not have a root web-page. So I want to redirect
+        // root requests to the Swagger UI RESTful API documentation page.
+        registry.addViewController("/").setViewName("redirect:/swagger/index.html");
+    }
 }
 ~~~
 
-The annotations on this class do the following:
+If you do need to take full control of Spring MVC or HATEOAS HAL Hypermedia configuration
+ then can add the following two annotations to your configuration class:
 
-* `@EnableWebMvc` – Let's us take full control of Spring MVC configuration.
-* `@EnableHypermediaSupport` – Let's us take full control of configuration for HATEOAS
+* <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-auto-configuration" target="_blank">`@EnableWebMvc`</a> – 
+ Let's us take full control of Spring MVC configuration. 
+* <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-hateoas" target="_blank">`@EnableHypermediaSupport`</a> – 
+ Let's us take full control of configuration for HATEOAS
  to develop RESTful APIs that makes use of hypermedia.
 
-Removing both of these annotations will result in SpringBoot providing auto-configuration for
-Spring MVC and HATEOAS support that may be adequate for many applications.
+Keep in mind that if you use these annotations then you may need to do more work 
+ to get to a point where you mimic all the SpringBoot auto-configuration initial state.
 
 ## Serving static content
 
-So long as you have a configuration class that extends `WebMvcAutoConfiguration` 
 Springboot will automatically serve static content from the following four 
 classpath locations:
 
@@ -66,9 +76,17 @@ classpath locations:
 * `/static/`
 * `/public/`
 
+If your application doesn't serve static content from these locations
+ then it is probably because you 
+ have added the `@EnableWebMvc` annotation to a configuration class and so 
+ SpringBoot is no longer auto-configured for these locations. You will need
+ to configure where you wish to serve static content from.
+
 ## HATEOAS REST services
 
-You can enable HATEOAS with the `@EnableHypermediaSupport` to one of your configuration classes.
+SpringBoot applications are auto-configured. To take advantage of HATEOAS
+you will need to create or extend `Resource` classes and provide resource
+assemblers that extend `ResourceAssembler`.
 
 
 # Swagger REST API documentation
