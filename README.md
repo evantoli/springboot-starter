@@ -4,12 +4,37 @@ This is a standalone SpringBoot application that I use as a minimal starting poi
 
 I have configured it to be ready to use.
 
+# Main application entry point
+
+The Java entry point for the application is the `static void main` method of the `Application` class.
+
+~~~Java
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+~~~
+
+The annotations on this class do the following:
+
+* `@Configuration` – Identifies the class as one that contains Java based Spring configuration.
+* `@EnableAutoConfiguration` – Instructs SpringBoot to look for and configure anything on
+your classpath that you may have missed. I prefer to not use this and be in control but for
+quick throw-away proofs-of-concept it can be handy to leave this on.
+* `@ComponentScan` – Instructs SpringBoot to automatically scan for Spring components.
+
 # Server configuration
 
 You can enable Spring Web MVC by adding the `@EnableWebMvs` annotation to one of your configuration classes.
 
-This example application has a configuration class that makes 
-this magic happen is called `ServerConfiguration`:
+I have added this annotation to a class called `ServerConfiguration`. 
+This class will become a handy place to then configure other server related 
+features and functionality like enabling HATEOAS support for RESTful services.
 
 ~~~Java
 @Configuration
@@ -20,6 +45,15 @@ public class ServerConfiguration extends WebMvcAutoConfiguration {
      // ...
 }
 ~~~
+
+The annotations on this class do the following:
+
+* `@EnableWebMvc` – Let's us take full control of Spring MVC configuration.
+* `@EnableHypermediaSupport` – Let's us take full control of configuration for HATEOAS
+ to develop RESTful APIs that makes use of hypermedia.
+
+Removing both of these annotations will result in SpringBoot providing auto-configuration for
+Spring MVC and HATEOAS support that may be adequate for many applications.
 
 ## Serving static content
 
@@ -35,7 +69,6 @@ classpath locations:
 ## HATEOAS REST services
 
 You can enable HATEOAS with the `@EnableHypermediaSupport` to one of your configuration classes.
-
 
 
 # Swagger REST API documentation
