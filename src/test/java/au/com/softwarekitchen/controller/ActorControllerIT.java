@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class HelloControllerIT {
+public class ActorControllerIT {
 
     @Value("${local.server.port}")
     private int port;
@@ -32,13 +32,13 @@ public class HelloControllerIT {
 
     @Before
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/hello");
+        this.base = new URL("http://localhost:" + port + "/actors");
         template = new TestRestTemplate();
     }
 
     @Test
-    public void getHello() throws Exception {
+    public void getActors() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
-        assertThat(response.getBody(), equalTo("Greetings from Spring Boot!"));
+//        assertThat(response.getBody(), equalTo("Greetings from Spring Boot!"));
     }
 }

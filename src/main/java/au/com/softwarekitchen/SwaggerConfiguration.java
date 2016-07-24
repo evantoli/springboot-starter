@@ -22,7 +22,8 @@ public class SwaggerConfiguration {
                 .apiInfo(apiInfo())
                 .ignoredParameterTypes(PagedResourcesAssembler.class)
                 .select()
-                .paths(regex("/customers.*"))
+//                .paths(regex("/actor.*"))
+//                .paths(regex("/movie.*"))
                 .build();
     }
 
