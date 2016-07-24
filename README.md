@@ -1,4 +1,4 @@
-# Prêt-à-Springboot
+# Springboot Starter
 
 This is a standalone SpringBoot application that I use as a minimal starting 
  point for lot's of experimentation.
