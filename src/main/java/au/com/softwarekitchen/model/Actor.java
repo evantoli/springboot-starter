@@ -77,7 +77,9 @@ public class Actor extends AbstractModel<Long> {
             sb.append(", releaseDate:").append(movie.getReleaseDate());
             sb.append("},");
         }
-        sb.setLength(sb.length() - 1);
+        if (sb.charAt(sb.length() - 1) == ',') {
+            sb.setLength(sb.length() - 1);
+        }
         sb.append(']');
         sb.append('}');
         return sb.toString();

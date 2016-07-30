@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class ActorController {
     @Autowired
     private ActorResourceAssembler actorResourceAssembler;
 
-    @RequestMapping(value = "/{actorId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{actorId}", method = RequestMethod.GET, produces = MediaTypes.HAL_JSON_VALUE)
     public ActorResource getActor(@PathVariable final Long actorId) {
 
         final Actor actor = actorRepository.findOne(actorId);
@@ -35,7 +36,7 @@ public class ActorController {
         return actorResource;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaTypes.HAL_JSON_VALUE)
     @ApiOperation("Gets all actors as paged resources.")
     public PagedResources<ActorResource> getActors(
             @PageableDefault(size = 50) final Pageable pageable,
