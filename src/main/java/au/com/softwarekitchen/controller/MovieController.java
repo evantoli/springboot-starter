@@ -11,10 +11,10 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Set;
 
 @RestController
 @ExposesResourceFor(Movie.class)
@@ -38,10 +38,16 @@ public class MovieController {
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Gets all movies as paged resources.")
     public PagedResources<MovieResource> getMovies(
+            @RequestParam(name = "actorIds", required = false) final Long [] actorIds,
             @PageableDefault(size = 50) final Pageable pageable,
             final PagedResourcesAssembler<Movie> pagedResourcesAssembler) {
 
-        final Page<Movie> movies = movieRepository.findAll(pageable);
+        final Page<Movie> movies;
+        if (actorIds != null && actorIds.length > 0) {
+            movies = movieRepository.findDistinctByActors_IdIn(Arrays.asList(actorIds), pageable);
+        } else {
+            movies = movieRepository.findAll(pageable);
+        }
         final PagedResources<MovieResource> pagedResources = pagedResourcesAssembler.toResource(movies, movieResourceAssembler);
         return pagedResources;
     }

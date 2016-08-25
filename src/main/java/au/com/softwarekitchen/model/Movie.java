@@ -18,7 +18,7 @@ public class Movie extends AbstractModel<Long> {
 
     private LocalDate releaseDate;
 
-    private String desccription;
+    private String description;
 
     @JsonIgnore
     @ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
@@ -52,12 +52,12 @@ public class Movie extends AbstractModel<Long> {
         this.releaseDate = releaseDate;
     }
 
-    public String getDesccription() {
-        return desccription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesccription(String desccription) {
-        this.desccription = desccription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<Actor> getActors() {
@@ -78,7 +78,7 @@ public class Movie extends AbstractModel<Long> {
         sb.append('{');
         sb.append("name:'").append(name).append('\'');
         sb.append(", releaseDate:").append(releaseDate);
-        sb.append(", desccription:'").append(desccription).append('\'');
+        sb.append(", description:'").append(description).append('\'');
         sb.append('}');
         return sb.toString();
     }

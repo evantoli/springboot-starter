@@ -19,10 +19,13 @@ public class MovieResourceAssembler extends ResourceAssemblerSupport<Movie, Movi
     public MovieResource toResource(final Movie movie) {
 
         final MovieResource resource = new MovieResource(movie);
-        resource.add(linkTo(methodOn(MovieController.class).getMovie(movie.getId())).withSelfRel());
-        for (Actor actor : movie.getActors()) {
-            resource.add(linkTo(methodOn(ActorController.class).getActor(actor.getId())).withRel("actors"));
-        }
+
+        resource.add(linkTo(methodOn(MovieController.class)
+                .getMovie(movie.getId())).withSelfRel());
+
+        resource.add(linkTo(methodOn(ActorController.class)
+                .getActors(new Long[] {movie.getId()}, null, null)).withRel("actors"));
+
         return resource;
     }
 }

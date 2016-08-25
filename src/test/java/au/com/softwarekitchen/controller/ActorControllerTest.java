@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -49,6 +51,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class ActorControllerTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ActorControllerTest.class);
+
     private MockMvc mvc;
 
     @Mock
@@ -71,7 +75,7 @@ public class ActorControllerTest {
         final Actor mary = new Actor("Mary", "White");
         mary.setId(2L);
 
-        final Page<Actor> actors = new PageImpl<Actor>(Arrays.asList(new Actor[]{fred, mary}));
+        final Page<Actor> actors = new PageImpl<>(Arrays.asList(new Actor[]{fred, mary}));
 
         when(actorRepository.findOne(fred.getId())).thenReturn(fred);
         when(actorRepository.findOne(mary.getId())).thenReturn(mary);
