@@ -1,26 +1,35 @@
 package au.com.softwarekitchen.controller;
 
-import au.com.softwarekitchen.hateoas.HALResource;
 import au.com.softwarekitchen.model.Actor;
-import au.com.softwarekitchen.model.Movie;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.core.EmbeddedWrapper;
+import org.springframework.hateoas.core.EmbeddedWrappers;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ActorResource extends HALResource<Actor> {
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+public class ActorResource extends Resource<Actor> {
+
+    @JsonUnwrapped
+    private final Resources<EmbeddedWrapper> embeddedResources;
 
     public ActorResource(Actor content, Link... links) {
-        super(content, links);
-        content.getMovies().forEach(m -> embedResource("movies", new MovieResource(m)));
+        this(content, Arrays.asList(links));
     }
 
     public ActorResource(Actor content, Iterable<Link> links) {
         super(content, links);
-        content.getMovies().forEach(m -> embedResource("movies", new MovieResource(m)));
+
+        final EmbeddedWrappers wrappers = new EmbeddedWrappers(true);
+        final List<EmbeddedWrapper> embeddedWrappers = content.getMovies().stream()
+                .map(m -> wrappers.wrap(new MovieResource(m), "movies"))
+                .collect(Collectors.toList());
+        embeddedResources = new Resources<>(embeddedWrappers, linkTo(MovieController.class).withSelfRel());
     }
 }
