@@ -34,7 +34,7 @@ public class InitialiseInMemoryDB {
             nottingHill.setDescription("William Thacker (Hugh Grant) is a London bookstore owner whose humdrum existence is thrown into romantic turmoil when famous American actress Anna Scott (Julia Roberts) appears in his shop.");
 
             final Movie bridgetJonesDiary = movieRepository.save(new Movie("Bridget Jones's Diary", LocalDate.of(2001, Month.APRIL, 4)));
-            bridgetJonesDiary.setDescription("Bridget Jones is an average woman struggling against her age, her weight, her job, her lack of a man, and her many imperfections. As a New Year's Resolution, Bridget decides to take control of her life, starting by keeping a diary in which she will always tell the complete truth.");
+            bridgetJonesDiary.setDescription("Bridget Jones is an average woman struggling against her age, her weight, her job, her lack of a man, and her many imperfections. As a New Year's Resolution, Bridget decides to take control of her life, starting by keeping a diary.");
 
             final Movie aboutABoy = movieRepository.save(new Movie("About a Boy", LocalDate.of(2002, Month.APRIL, 26)));
             final Movie eatPrayLove = movieRepository.save(new Movie("Eat Pray Love", LocalDate.of(2010, Month.AUGUST, 13)));
