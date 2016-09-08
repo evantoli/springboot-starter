@@ -25,14 +25,15 @@ public class ActorController {
     @Autowired
     private ActorRepository actorRepository;
 
-    @Autowired
-    private ActorResourceAssembler actorResourceAssembler;
+//    @Autowired
+    private ActorResourceAssembler actorResourceAssembler = new ActorResourceAssembler();
 
     @RequestMapping(value = "/{actorId}", method = RequestMethod.GET, produces = MediaTypes.HAL_JSON_VALUE)
-    public ActorResource getActor(@PathVariable final Long actorId) {
+    public ActorResource getActor(@PathVariable final Long actorId,
+                                  @RequestParam(required = false) Long version) {
 
         final Actor actor = actorRepository.findOne(actorId);
-        final ActorResource actorResource = actorResourceAssembler.toResource(actor);
+        final ActorResource actorResource = actorResourceAssembler.toResource(actor, version);
         return actorResource;
     }
 

@@ -6,12 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +33,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.plugin.core.OrderAwarePluginRegistry;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -46,8 +51,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MockServletContext.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { MockServletContext.class } )
 @WebAppConfiguration
 public class ActorControllerTest {
 
@@ -58,7 +63,7 @@ public class ActorControllerTest {
     @Mock
     private ActorRepository actorRepository;
 
-    @Mock
+    @Mock(answer = Answers.CALLS_REAL_METHODS)
     private ActorResourceAssembler actorResourceAssembler;
 
     @InjectMocks
@@ -81,8 +86,10 @@ public class ActorControllerTest {
         when(actorRepository.findOne(mary.getId())).thenReturn(mary);
         when(actorRepository.findAll(any(Pageable.class))).thenReturn(actors);
 
-        when(actorResourceAssembler.toResource(any(Actor.class))).thenCallRealMethod();
-        when(actorResourceAssembler.toResources(any(Iterable.class))).thenCallRealMethod();
+//        when(actorResourceAssembler.toResource(any(Actor.class))).thenCallRealMethod();
+//        when(actorResourceAssembler.toResources(any(Iterable.class))).thenCallRealMethod();
+//        when(actorResourceAssembler.toResource(any(Actor.class), any(Long.class))).thenCallRealMethod();
+//        when(actorResourceAssembler).thenCallRealMethod();
 
         // Create an object mapper to ensure we get HAL+JSON responses from our
         // Mock controllers.
@@ -117,9 +124,9 @@ public class ActorControllerTest {
                         .accept(MediaTypes.HAL_JSON);
 
         mvc.perform(builder)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaTypes.HAL_JSON))
                 .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is("Fred")))
                 .andExpect(jsonPath("$.lastName", is("Black")));
@@ -133,9 +140,9 @@ public class ActorControllerTest {
                         .accept(MediaTypes.HAL_JSON);
 
         mvc.perform(builder)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaTypes.HAL_JSON))
                 .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._links.self.href", endsWith("actors")))
                 .andExpect(jsonPath("$._embedded.actors.[0].id", is(1)))
                 .andExpect(jsonPath("$._embedded.actors.[0].firstName", is("Fred")))
