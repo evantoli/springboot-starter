@@ -30,6 +30,12 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!-- Creates health and monitoring REST endpoints -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- Provides JSON mappers for Java 8 Time and Date classes like LocalDate -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -94,6 +100,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- creates a git.properties file in the root of the classpath -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
+
         </plugins>
     </build>
 

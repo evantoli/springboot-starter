@@ -18,6 +18,6 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
         // This application does not have a root web-page. So I want to redirect
         // root requests to the Swagger UI RESTful API documentation page.
-        registry.addViewController("/").setViewName("redirect:/swagger/index.html");
+        registry.addViewController("/").setViewName("redirect:/swagger-ui.html");
     }
 }
